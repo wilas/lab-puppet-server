@@ -1,0 +1,19 @@
+# Define filebucket 'main':
+filebucket { 'main':
+    server => '<%= fqdn %>',
+    path   => false,
+}
+
+# Make filebucket 'main' the default backup location for all File resources:
+#File { backup => 'main', } 
+# Create a backup version in the same location with the extension .bak
+File { backup => ".bak", }
+
+Exec {
+    logoutput => on_failure,
+}
+
+node default {
+    # simple test for puppet: create file in /tmp/simple.txt
+    include simple
+}
