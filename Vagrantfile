@@ -57,32 +57,13 @@ Vagrant::Config.run do |config|
         puppet.module_path = "modules"
     end
     
-    #run puppet agent daemon.... before edit /etc/hosts (add puppet_server)
-    sh2_config.vm.provision :puppet_server do |puppet|
-        puppet.puppet_server = "shepherd.farm"
-        puppet.puppet_node = "#{vm_name}.farm"
-    end
-
-  end
-  config.vm.define :sheep03 do |sh3_config|  
-    vm_name= "sheep03"
-    sh3_config.vm.box = "SL64_box"
-    sh3_config.vm.host_name = "#{vm_name}.farm"
-    sh3_config.vm.customize ["modifyvm", :id, "--memory", "512", "--name", "#{vm_name}"]
-  
-    sh3_config.vm.network :hostonly, "77.77.77.103"
-    sh3_config.vm.share_folder "v-root", "/vagrant", "."
-    
-    sh3_config.vm.provision :puppet do |puppet|
-        puppet.manifests_path = "manifests"
-        # set /etc/hosts
-        puppet.manifest_file  = "simple.pp"
-    end
-
-    sh3_config.vm.provision :puppet_server do |puppet|
-        puppet.puppet_server = "shepherd.farm"
-        puppet.puppet_node = "#{vm_name}.farm"
-    end
+    #puppet server version
+    #first run on shepherd: puppet master --verbose --no-daemonize
+    #use to sign cert: puppet cert --sign "sheep02.farm"
+    #sh2_config.vm.provision :puppet_server do |puppet|
+    #    puppet.puppet_server = "shepherd.farm"
+    #    puppet.puppet_node = "#{vm_name}.farm"
+    #end
 
   end
 end
