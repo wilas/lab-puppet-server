@@ -9,6 +9,18 @@ Create and configure basic agent/master puppet.
  - puppet master vm: shepherd.farm
  - puppet agents vm: sheep01.farm, sheep02.farm
 
+## Howto
+
+ - create SL64_box using [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box)
+ - copy ssh_keys from [ssh-gerwazy](https://github.com/wilas/ssh-gerwazy)
+
+```
+    vagrant up
+    ssh root@77.77.77.10 #shepherd
+    ssh root@77.77.77.101 #sheep01
+    ssh root@77.77.77.102 #sheep02
+    vagrant destroy
+```
 
 ## Help commands:
 
