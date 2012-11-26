@@ -14,14 +14,18 @@ Create and configure basic agent/master puppet.
 
 ### master:
 
- - puppet master --verbose --no-daemonize
- - puppetca --list
- - puppetca --sign <client>
+```
+    puppet master --verbose --no-daemonize
+    puppetca --list
+    puppetca --sign client_cert_name
+```
 
 ### agent:
 
- - puppet agent --test --noop
- - puppet agent --test
+```
+    puppet agent --test --noop
+    puppet agent --test
+```
 
 
 ## Bibliography:
