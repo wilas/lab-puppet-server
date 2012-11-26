@@ -3,20 +3,12 @@
 
 Vagrant::Config.run do |config|
   
-  #gem install vagrant-vbguest
-  #config.vbguest.auto_update = false
-  #config.vbguest.iso_path = "#{ENV['HOME']}/Downloads/VBoxGuestAdditions.iso"
-  #config.vbguest.iso_path = "http://company.server/VirtualBox/$VBOX_VERSION/VBoxGuestAdditions.iso"
-
   config.vm.define :shepherd do |sh_config|  
     vm_name= "shepherd"
     sh_config.vm.box = "SL64_box"
     sh_config.vm.host_name = "#{vm_name}.farm"
     sh_config.vm.customize ["modifyvm", :id, "--memory", "1024", "--name", "#{vm_name}"]
   
-    #sh_config.vm.network :bridged
-    #sh_config.vm.network :bridged, :adapter => 1
-    #sh_config.vm.network :bridged, { bridge: 'wlan0' }
     sh_config.vm.network :hostonly, "77.77.77.10"
     sh_config.vm.share_folder "v-root", "/vagrant", "."
 
@@ -24,7 +16,6 @@ Vagrant::Config.run do |config|
         puppet.manifests_path = "manifests"
         puppet.manifest_file  = "master.pp"
         puppet.module_path = "modules"
-        # puppet.options = ["--fileserverconfig=/vagrant/fileserver.conf", ]
     end
   end
   config.vm.define :sheep01 do |sh1_config|  
@@ -57,9 +48,10 @@ Vagrant::Config.run do |config|
         puppet.module_path = "modules"
     end
     
-    #puppet server version
-    #first run on shepherd: puppet master --verbose --no-daemonize
-    #use to sign cert: puppet cert --sign "sheep02.farm"
+    # You can also use aready created puppet server for provisioning
+    # First start puppet master on shepherd: puppet master --verbose --no-daemonize
+    # Sign cert: puppet cert --sign "sheep02.farm"
+    # Uncomment below lines:
     #sh2_config.vm.provision :puppet_server do |puppet|
     #    puppet.puppet_server = "shepherd.farm"
     #    puppet.puppet_node = "#{vm_name}.farm"
