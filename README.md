@@ -48,7 +48,7 @@ Create and configure basic agent/master puppet.
 
 ## Copyright and license
 
-Copyright 2012, the puppet-ippon authors
+Copyright 2012, Kamil Wilas (wilas.pl)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this work except in compliance with the License.
