@@ -4,7 +4,7 @@ class puppet_server {
         ensure => installed,
     }
   
-    #change on running -> puppet_server provisioning
+    # change on running -> puppet_server provisioning
     service { "puppetmaster":
         ensure  => stopped,
         enable  => false,
@@ -18,7 +18,7 @@ class puppet_server {
         action => accept,
     }
 
-    #proper entry in /etc/hosts
+    # proper entry in /etc/hosts
     host { "$fqdn":
         ip           => "$ipaddress_eth1",
         host_aliases => "$hostname",
@@ -48,7 +48,6 @@ class puppet_server {
         require => Package["puppet-server"],
     }
 
-    #from git repo all manifests ??
     file { "/etc/puppet/manifests":
         ensure => directory,
         mode   => 0644,
@@ -66,16 +65,14 @@ class puppet_server {
         require => File["/etc/puppet/manifests"],
     }
 
-    #from git repo all modules ??
-    #exec: git clone my_repo_modules -> mv my_repo_modules modules
-    #maybe better exec: git init.... git pull... cp .git, on new created puppet-server
+    # all modules from git repo?
     file { "/etc/puppet/modules/":
         ensure  => directory,
         mode    => 0644,
         owner   => "root",
         group   => "root",
         recurse => true,
-        #it may be git repo with puppet modules to test (or local git repo...)
+        # It may be git repo with puppet modules to test (or local git repo via shared_folder)
         source => "puppet:///modules/puppet_server/pmodules",
         require => Package["puppet-server"],
     }

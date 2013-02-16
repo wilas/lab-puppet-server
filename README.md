@@ -11,7 +11,7 @@ Create and configure basic agent/master puppet.
 
 ## Howto
 
- - create SL64_box using [veewee-SL64-box](https://github.com/wilas/veewee-SL64-box)
+ - create SL64_box using [veewee-SL6-box](https://github.com/wilas/veewee-vagrant-SL6-x86_64)
  - copy ssh_keys from [ssh-gerwazy](https://github.com/wilas/ssh-gerwazy)
 
 ```
@@ -28,14 +28,15 @@ Create and configure basic agent/master puppet.
 
 ```
     puppet master --verbose --no-daemonize
-    puppetca --list
-    puppetca --sign client_cert_name
+    puppet cert --list
+    puppet cert --sign client_cert_name
+    puppet cert --list --all
 ```
 
 ### agent:
 
 ```
-    puppet agent --test --noop
+    puppet agent --test --noop #dry-run mode
     puppet agent --test
 ```
 
@@ -44,7 +45,8 @@ Create and configure basic agent/master puppet.
 
  - basic agent/master: http://docs.puppetlabs.com/learning/agent_master_basic.html
  - other puppet links: https://github.com/wilas/vagrant-puppet-flat
-
+ - upgrading puppet: http://docs.puppetlabs.com/guides/upgrading.html
+ - use stage: http://docs.puppetlabs.com/puppet/3/reference/lang_run_stages.html
 
 ## Copyright and license
 
