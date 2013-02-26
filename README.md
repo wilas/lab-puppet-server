@@ -11,7 +11,7 @@ Create and configure basic agent/master puppet.
 
 ## Howto
 
- - create SL64_box using [veewee-SL6-box](https://github.com/wilas/veewee-vagrant-SL6-x86_64)
+ - create SL6 box using [veewee-boxarium](https://github.com/wilas/veewee-boxarium)
  - copy ssh_keys from [ssh-gerwazy](https://github.com/wilas/ssh-gerwazy)
 
 ```
