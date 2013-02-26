@@ -5,7 +5,7 @@ Vagrant::Config.run do |config|
   
   config.vm.define :shepherd do |sh_config|  
     vm_name= "shepherd"
-    sh_config.vm.box = "SL64_box"
+    sh_config.vm.box = "SL6"
     sh_config.vm.host_name = "#{vm_name}.farm"
     sh_config.vm.customize ["modifyvm", :id, "--memory", "1024", "--name", "#{vm_name}"]
   
@@ -13,6 +13,7 @@ Vagrant::Config.run do |config|
     sh_config.vm.share_folder "v-root", "/vagrant", "."
 
     sh_config.vm.provision :puppet do |puppet|
+        puppet.options = "--hiera_config hiera.yaml"
         puppet.manifests_path = "manifests"
         puppet.manifest_file  = "master.pp"
         puppet.module_path = "modules"
@@ -20,7 +21,7 @@ Vagrant::Config.run do |config|
   end
   config.vm.define :sheep01 do |sh1_config|  
     vm_name= "sheep01"
-    sh1_config.vm.box = "SL64_box"
+    sh1_config.vm.box = "SL6"
     sh1_config.vm.host_name = "#{vm_name}.farm"
     sh1_config.vm.customize ["modifyvm", :id, "--memory", "512", "--name", "#{vm_name}"]
   
@@ -28,6 +29,7 @@ Vagrant::Config.run do |config|
     sh1_config.vm.share_folder "v-root", "/vagrant", "."
 
     sh1_config.vm.provision :puppet do |puppet|
+        puppet.options = "--hiera_config hiera.yaml"
         puppet.manifests_path = "manifests"
         puppet.manifest_file  = "agent.pp"
         puppet.module_path = "modules"
@@ -35,7 +37,7 @@ Vagrant::Config.run do |config|
   end
   config.vm.define :sheep02 do |sh2_config|  
     vm_name= "sheep02"
-    sh2_config.vm.box = "SL64_box"
+    sh2_config.vm.box = "SL6"
     sh2_config.vm.host_name = "#{vm_name}.farm"
     sh2_config.vm.customize ["modifyvm", :id, "--memory", "512", "--name", "#{vm_name}"]
   
@@ -43,6 +45,7 @@ Vagrant::Config.run do |config|
     sh2_config.vm.share_folder "v-root", "/vagrant", "."
 
     sh2_config.vm.provision :puppet do |puppet|
+        puppet.options = "--hiera_config hiera.yaml"
         puppet.manifests_path = "manifests"
         puppet.manifest_file  = "agent.pp"
         puppet.module_path = "modules"
