@@ -1,0 +1,6 @@
+---
+classes :
+    - 'puppet_server'
+puppet_server::autosign_nodes :
+                - 'sheep_app1.farm'
+                - 'sheep_app2.farm'

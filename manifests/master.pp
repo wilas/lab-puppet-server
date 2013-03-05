@@ -1,19 +1,9 @@
-stage { "base": before  => Stage["main"] }
-stage { "last": require => Stage["main"] }
+# PUPPET SERVER APPLY
 
-class { "yum_repos": stage     => "base" }
-class { "basic_package": stage => "base" }
-class { "user::root": stage    => "base" }
-Class["yum_repos"] -> Class["basic_package"] -> Class["user::root"]
-
-# firewall manage
-service { "iptables":
-    ensure => running,
-    enable => true,
-}
+# Node global
 exec { 'clear-firewall':
     command     => '/sbin/iptables -F',
-    refreshonly => true,        
+    refreshonly => true,
 }
 exec { 'persist-firewall':
     command     => '/sbin/iptables-save >/etc/sysconfig/iptables',
@@ -23,12 +13,29 @@ Firewall {
     subscribe => Exec['clear-firewall'],
     notify    => Exec['persist-firewall'],
 }
-class { "basic_firewall": }
 
+# Include classes - search for classes in *.yaml/*.json files
+hiera_include('classes')
+# Classes order
+firewall { '100 allow puppet':
+    state  => ['NEW'],
+    dport  => '8140',
+    proto  => 'tcp',
+    action => accept,
+}
+Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
+Class['basic_package'] -> Class['puppet_server']
 
-# PUPPET SERVER
-class { "puppet_server": }
-file { "/tmp/vagrant.txt":
-    ensure  => file,
-    content => "Vagrant say: master -> $ipaddress -> $hostname -> $fqdn \n",
+# In real world from DNS
+host { $fqdn:
+    ip           => $ipaddress_eth1,
+    host_aliases => $hostname,
+}
+host { 'sheep_app1.farm':
+    ip           => '77.77.77.101',
+    host_aliases => 'sheep_app1',
+}
+host { 'sheep_app2.farm':
+    ip           => '77.77.77.102',
+    host_aliases => 'sheep_app2',
 }

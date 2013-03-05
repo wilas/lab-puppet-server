@@ -1,4 +1,7 @@
+# PUPPETHEADER: Managed by Puppet
 [main]
+    #confdir = /etc/puppet
+    #vardir = /var/lib/puppet
     # The Puppet log directory.
     # The default value is '$vardir/log'.
     logdir = /var/log/puppet
@@ -13,9 +16,10 @@
 
     archive_files = true
     archive_file_server = <%= fqdn %>
+    hiera_config = $confdir/hiera.yaml
 
 [master]
-    certname = <%= fqdn %>
+    certname = 007007v007.<%=fqdn%>
     #dns_alt_names = <%= hostname %>,<%= fqdn %>,localhost,localhost.localdomain
     #ssl_client_header = SSL_CLIENT_S_DN
     #ssl_client_verify_header = SSL_CLIENT_VERIFY
@@ -27,8 +31,8 @@
 
 [agent]
     pluginsync = true
-    certname = <%= fqdn %>
-    server = <%= fqdn %>
+    certname = 007007v007.<%=fqdn%>
+    server = <%=fqdn%>
 
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in
@@ -50,21 +54,3 @@
     #manifest = /etc/puppet/env/$environment/manifests/site.pp
     #modulepath = /etc/puppet/env/$environment/modules
     #manifestdir = /etc/puppet/env/$environment/manifests
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

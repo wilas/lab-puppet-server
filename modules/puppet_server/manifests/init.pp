@@ -1,80 +1,91 @@
 class puppet_server {
 
-    package { "puppet-server":
+    $autosign_nodes = hiera_array('puppet_server::autosign_nodes',[])
+
+    package { 'puppet-server':
         ensure => installed,
     }
-  
-    # change on running -> puppet_server provisioning
-    service { "puppetmaster":
+
+    # change on running or run by hand or via cron
+    service { 'puppetmaster':
         ensure  => stopped,
         enable  => false,
-        require => Package["puppet-server"],
+        require => Package['puppet-server'],
     }
 
-    firewall { "100 allow puppet":
-        state  => ['NEW'],
-        dport  => '8140',
-        proto  => 'tcp',
-        action => accept,
-    }
-
-    # proper entry in /etc/hosts
-    host { "$fqdn":
-        ip           => "$ipaddress_eth1",
-        host_aliases => "$hostname",
-    }
-
-    host { "sheep01.farm":
-        ip           => "77.77.77.101",
-        host_aliases => "sheep01",
-    }
-
-    host { "sheep02.farm":
-        ip           => "77.77.77.102",
-        host_aliases => "sheep02",
-    }
-
-    host { "sheep03.farm":
-        ip           => "77.77.77.103",
-        host_aliases => "sheep03",
-    }
-
-    file { "/etc/puppet/puppet.conf":
+    file { '/etc/puppet/puppet.conf':
         ensure  => file,
-        mode    => 0644,
-        owner   => "root",
-        group   => "root",
-        content => template("puppet_server/puppet.conf.erb"),
-        require => Package["puppet-server"],
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        content => template('puppet_server/puppet.conf.erb'),
+        require => Package['puppet-server'],
     }
 
-    file { "/etc/puppet/manifests":
-        ensure => directory,
-        mode   => 0644,
-        owner  => "root",
-        group  => "root",
-        require => Package["puppet-server"],
-    }
-
-    file { "/etc/puppet/manifests/site.pp":
+    file { '/etc/puppet/autosign.conf':
         ensure  => file,
-        mode    => 0644,
-        owner   => "root",
-        group   => "root",
-        content => template("puppet_server/site.pp.erb"),
-        require => File["/etc/puppet/manifests"],
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        content => template('puppet_server/autosign.conf.erb'),
+        require => Package['puppet-server'],
     }
 
-    # all modules from git repo?
-    file { "/etc/puppet/modules/":
+    file { '/etc/puppet/hiera.yaml':
+        ensure  => file,
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        source  => 'puppet:///modules/puppet_server/hiera.yaml',
+        require => Package['puppet-server'],
+    }
+
+    # hieradata from git ?!
+    file { '/etc/puppet/hieradata/':
         ensure  => directory,
-        mode    => 0644,
-        owner   => "root",
-        group   => "root",
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
         recurse => true,
-        # It may be git repo with puppet modules to test (or local git repo via shared_folder)
-        source => "puppet:///modules/puppet_server/pmodules",
-        require => Package["puppet-server"],
+        source  => 'puppet:///modules/puppet_server/phieradata',
+        require => Package['puppet-server'],
     }
 
+    file { '/etc/puppet/manifests':
+        ensure  => directory,
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        require => Package['puppet-server'],
+    }
+
+    file { '/etc/puppet/manifests/site.pp':
+        ensure  => file,
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        content => template('puppet_server/site.pp.erb'),
+        require => File['/etc/puppet/manifests'],
+    }
+
+    # all needed modules from git ?!
+    file { '/etc/puppet/modules/':
+        ensure  => directory,
+        mode    => '0644',
+        owner   => 'puppet',
+        group   => 'puppet',
+        recurse => true,
+        source  => 'puppet:///modules/puppet_server/pmodules',
+        require => Package['puppet-server'],
+    }
+
+    # todo: manage each subdir
+    file { '/var/lib/puppet':
+        ensure  => directory,
+        mode    => '0640',
+        owner   => 'puppet',
+        group   => 'puppet',
+        recurse => true,
+        require => Package['puppet-server'],
+    }
 }

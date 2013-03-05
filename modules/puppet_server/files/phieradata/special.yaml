@@ -1,0 +1,4 @@
+---
+classes :
+    - 'simple'
+hello_hiera : 'hello qwerty new'

@@ -1,3 +1,4 @@
+# PUPPETHEADER: Managed by Puppet
 # Define filebucket 'main':
 filebucket { 'main':
     server => '<%= fqdn %>',
@@ -13,7 +14,41 @@ Exec {
     logoutput => on_failure,
 }
 
-node default {
-    # simple test for puppet: create file in /tmp/simple.txt
-    include simple
+node basenode {
+    # Node global
+    exec { 'clear-firewall':
+        command     => '/sbin/iptables -F',
+        refreshonly => true,
+    }
+    exec { 'persist-firewall':
+        command     => '/sbin/iptables-save >/etc/sysconfig/iptables',
+        refreshonly => true,
+    }
+    Firewall {
+        subscribe => Exec['clear-firewall'],
+        notify    => Exec['persist-firewall'],
+    }
+}
+
+# puppetmaster server - to not break server by puppet agent --test
+node 'shepherd.farm' inherits basenode {
+    hiera_include('classes')
+
+    firewall { '100 allow puppet':
+        state  => ['NEW'],
+        dport  => '8140',
+        proto  => 'tcp',
+        action => accept,
+    }
+
+    Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
+}
+
+# default nodes
+node default inherits basenode {
+    # must be string - otherwise error: can't convert true into String
+    $is_puppet_agent_node = "true"
+    hiera_include('classes')
+    Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
+    Class['basic_package'] -> Class['puppet_agent']
 }

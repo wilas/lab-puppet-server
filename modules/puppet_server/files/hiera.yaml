@@ -1,0 +1,12 @@
+# PUPPETHEADER: Managed by Puppet
+---
+:hierarchy:
+    - %{::osfamily}-pkgs
+    - %{::osfamily}-repos
+    - puppet-agent-%{::is_puppet_agent_node}
+    - common
+    - special
+:backends:
+    - yaml
+:yaml:
+    :datadir: '/etc/puppet/hieradata'
