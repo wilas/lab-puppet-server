@@ -1,3 +1,4 @@
 ---
 classes :
     - 'puppet_agent'
+puppet_agent::puppet_server : 'shepherd.farm'

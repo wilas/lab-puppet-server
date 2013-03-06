@@ -1,4 +1,4 @@
 ---
 classes :
     - 'simple'
-hello_hiera : 'hello qwerty new'
+hello_hiera : 'hello hiera world'

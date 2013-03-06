@@ -63,6 +63,8 @@ Create and configure basic agent/master puppet.
 ## Bibliography:
 
  - basic agent/master: http://docs.puppetlabs.com/learning/agent_master_basic.html
+ - use puppet modules + worth using commands: https://github.com/wilas/vagrant-puppet-modules
+ - use puppet hiera: https://github.com/wilas/vagrant-puppet-hiera
  - other puppet links: https://github.com/wilas/vagrant-puppet-flat
  - upgrading puppet: http://docs.puppetlabs.com/guides/upgrading.html
  - use stage: http://docs.puppetlabs.com/puppet/3/reference/lang_run_stages.html

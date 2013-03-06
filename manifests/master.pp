@@ -25,6 +25,7 @@ firewall { '100 allow puppet':
 }
 Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
 Class['basic_package'] -> Class['puppet_server']
+Class['basic_package'] -> Class['puppet_server::agent']
 
 # In real world from DNS
 host { $fqdn:
