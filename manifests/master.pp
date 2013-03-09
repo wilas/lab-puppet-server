@@ -17,15 +17,16 @@ Firewall {
 # Include classes - search for classes in *.yaml/*.json files
 hiera_include('classes')
 # Classes order
+Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
+Class['basic_package'] -> Class['puppet_server']
+Class['basic_package'] -> Class['puppet_server::agent']
+# Extra firewall rules
 firewall { '100 allow puppet':
     state  => ['NEW'],
     dport  => '8140',
     proto  => 'tcp',
     action => accept,
 }
-Class['yum_repos'] -> Class['basic_package'] -> Class['user::root']
-Class['basic_package'] -> Class['puppet_server']
-Class['basic_package'] -> Class['puppet_server::agent']
 
 # In real world from DNS
 host { $fqdn:
